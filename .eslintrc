@@ -1,0 +1,76 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["react-hooks", "pretty-imports", "jsx-a11y"],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    // "off" or 0 - turn the rule off
+    // "warn" or 1 - turn the rule on as a warning (doesn’t affect exit code)
+    // "error" or 2 - turn the rule on as an error (exit code is 1 when triggered)
+    "@typescript-eslint/indent": 0,
+    "@typescript-eslint/member-delimiter-style": 0,
+    "@typescript-eslint/no-empty-interface": 2,
+    "@typescript-eslint/explicit-module-boundary-types": 0,
+    // '@typescript-eslint/interface-name-prefix': [1, 'never'],
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v1.11.0/packages/eslint-plugin/docs/rules/prefer-interface.md
+    "@typescript-eslint/prefer-interface": 0,
+    // Q: possible remove rule below, https://github.com/xojs/eslint-config-xo/commit/125759704552a56ef1f8d332c9c7a0933307c353
+    // "@typescript-eslint/no-use-before-define": ["error", "nofunc"],
+    "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
+    "@typescript-eslint/camelcase": 0,
+    "react/prop-types": 0,
+    "react/no-children-prop": 1,
+    "react/display-name": 0,
+    "react/jsx-curly-brace-presence": 2,
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "jsx-a11y/anchor-is-valid": 1,
+    // Prettier as warnings
+    "prettier/prettier": 1,
+    "eqeqeq": 2,
+    "semi": ["error", "never"],
+    "@typescript-eslint/no-unused-vars": [
+      2,
+      { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }
+    ],
+    // Hooks rules
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
+    "no-nested-ternary": 2,
+    "no-console": "error",
+    "no-debugger": "error",
+    "no-shadow": ["error", { "hoist": "all" }],
+    "@typescript-eslint/no-use-before-define": "warn",
+    "spaced-comment": ["error", "always", { "exceptions": ["-+"] }],
+    "@typescript-eslint/prefer-optional-chain": "error",
+    "pretty-imports/sorted": "warn",
+    "react/jsx-handler-names": [
+      "warn",
+      {
+        "eventHandlerPrefix": "handle|toggle",
+        "checkLocalVariables": false
+      }
+    ],
+    "max-lines": ["error", 300],
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "TSEnumDeclaration",
+        "message": "Don't declare enums"
+      }
+    ],
+    "react/jsx-boolean-value": "warn",
+    "no-duplicate-imports": "error",
+    "jsx-a11y/no-autofocus": "off"
+  }
+}

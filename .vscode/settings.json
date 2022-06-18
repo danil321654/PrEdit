@@ -1,0 +1,12 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "eslint.alwaysShowStatus": true,
+  "eslint.format.enable": true,
+  "eslint.options": {},
+  "javascript.format.enable": false,
+  "typescript.format.enable": false,
+  "editor.formatOnSave": true,
+  "typescript.tsdk": "./node_modules/typescript/lib"
+}
