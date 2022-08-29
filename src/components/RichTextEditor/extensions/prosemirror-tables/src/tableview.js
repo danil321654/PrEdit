@@ -34,7 +34,7 @@ export function updateColumns(
   overrideValue,
   nextWidth = -1
 ) {
-  const maxWidth = table.clientWidth ?? 560
+  const maxWidth = table.clientWidth ?? 680
   let totalWidth = 0,
     fixedWidth = true
   let nextDOM = colgroup.firstChild,
@@ -56,8 +56,9 @@ export function updateColumns(
       } else {
         if (!cssWidth) {
           nextDOM.style.width = maxWidth / row.childCount + 'px'
-        } else if (nextDOM.style.width != cssWidth)
-          nextDOM.style.width = cssWidth
+        } else {
+          nextDOM.setAttribute('style', `width: ${cssWidth}`)
+        }
         nextDOM = nextDOM.nextSibling
       }
     }
