@@ -2,32 +2,29 @@
 import { NodeView } from 'prosemirror-view'
 import { Node as ProseMirrorNode } from 'prosemirror-model'
 
-export function updateColumns(node: ProseMirrorNode, colgroup: Element, table: Element, cellMinWidth: number, overrideCol?: number, overrideValue?: any) {
-  console.log(overrideCol, overrideValue)
-  let totalWidth = 0
-  let fixedWidth = true
+export function updateColumns(
+  node: ProseMirrorNode,
+  colgroup: Element,
+  table: Element,
+  overrideCol?: number,
+  overrideValue?: any,
+) {
   let nextDOM = colgroup.firstChild
   const row = node.firstChild
-
   for (let i = 0, col = 0; i < row.childCount; i += 1) {
     const { colspan, colwidth } = row.child(i).attrs
 
     for (let j = 0; j < colspan; j += 1, col += 1) {
-      const hasWidth = overrideCol === col ? overrideValue : colwidth && colwidth[j]
+      const hasWidth = overrideCol === col ? overrideValue : colwidth?.[j]
       const cssWidth = hasWidth ? `${hasWidth}px` : ''
 
-      totalWidth += hasWidth || cellMinWidth
-
-      if (!hasWidth) {
-        fixedWidth = false
-      }
-
       if (!nextDOM) {
-        colgroup.appendChild(document.createElement('col')).style.width = cssWidth
+        const col = document.createElement('col')
+        colgroup.appendChild(col).style.width =
+          cssWidth
+          console.log('++++')
+          console.log(col.style.width)
       } else {
-        if (nextDOM.style.width !== cssWidth) {
-          nextDOM.style.width = cssWidth
-        }
 
         nextDOM = nextDOM.nextSibling
       }
@@ -41,13 +38,26 @@ export function updateColumns(node: ProseMirrorNode, colgroup: Element, table: E
     nextDOM = after
   }
 
-  if (fixedWidth) {
-    table.style.width = `${totalWidth}px`
-    table.style.minWidth = ''
-  } else {
-    table.style.width = ''
-    table.style.minWidth = `${totalWidth}px`
-  }
+  const widths = []
+  if (!table.style.width) table.style.width = `100%`
+  const firstRow = table.querySelector('tr')
+
+  firstRow?.querySelectorAll('th,td').forEach(cell => {
+    const colspan = +cell.getAttribute('colspan')
+    const clientWidth = cell.clientWidth
+    if (colspan > 1) {
+      const colwidths = cell
+        .getAttribute('colwidth')
+        ?.split(',')
+        .map(colwidth => +colwidth)
+
+      colwidths?.forEach(colwidth => {
+        widths.push(colwidth)
+      })
+    } else {
+      widths.push(clientWidth)
+    }
+  })
 }
 
 

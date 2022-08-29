@@ -1,8 +1,20 @@
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext } from 'react'
+import { AxiosInstance } from 'axios'
 
-const ApiContext = createContext({});
+export interface ApiContextProps {
+  apiClient: AxiosInstance
+}
 
-export const ApiContextProvider: React.FC = ({ children, apiClient }) => {
+export type ApiContextValues = ApiContextProps & {
+  children: React.ReactNode
+}
+
+const ApiContext = createContext({} as ApiContextProps)
+
+export const ApiContextProvider: React.FC<ApiContextValues> = ({
+  children,
+  apiClient,
+}) => {
   return (
     <ApiContext.Provider
       value={{
@@ -11,7 +23,7 @@ export const ApiContextProvider: React.FC = ({ children, apiClient }) => {
     >
       {children}
     </ApiContext.Provider>
-  );
-};
+  )
+}
 
-export const useApiContext = () => useContext(ApiContext);
+export const useApiContext = () => useContext(ApiContext)
