@@ -1,50 +1,50 @@
-import clsx from "clsx";
-import React, { useState } from "react";
+import clsx from 'clsx'
+import React, { useState } from 'react'
+import { Delete, Add } from '@material-ui/icons'
 import {
   Grid,
   IconButton,
   makeStyles,
   Tooltip,
   Typography,
-} from "@material-ui/core";
-import { Delete, Add } from "@material-ui/icons";
+} from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => {
-  let borderColor;
-  let borderColorHover;
+  let borderColor
+  let borderColorHover
   switch (theme.palette.type) {
-    case "light": {
-      borderColor = "rgba(0, 0, 0, 0.12)";
-      borderColorHover = "rgba(103, 146, 255, 1)";
-      break;
+    case 'light': {
+      borderColor = 'rgba(0, 0, 0, 0.12)'
+      borderColorHover = 'rgba(103, 146, 255, 1)'
+      break
     }
-    case "dark": {
-      borderColor = "rgba(255, 255, 255, 0.12)";
-      borderColorHover = "rgba(147, 176, 251, 1)";
-      break;
+    case 'dark': {
+      borderColor = 'rgba(255, 255, 255, 0.12)'
+      borderColorHover = 'rgba(147, 176, 251, 1)'
+      break
     }
   }
   return {
     imageCard: {
       padding: theme.spacing(0.63),
-      flex: "0 1 160px",
+      flex: '0 1 160px',
       margin: theme.spacing(1.25),
-      overflow: "hidden",
-      "&:hover": {
-        cursor: "pointer",
+      overflow: 'hidden',
+      '&:hover': {
+        cursor: 'pointer',
       },
     },
 
     imageCard_image: {
-      border: "1px solid",
+      border: '1px solid',
       background: theme.palette.background.default,
       borderColor: borderColor,
       height: theme.spacing(22.5),
       width: theme.spacing(18.75),
-      overflow: "hidden",
-      position: "relative",
+      overflow: 'hidden',
+      position: 'relative',
       borderRadius: theme.shape.borderRadius,
-      "&:hover": {
+      '&:hover': {
         borderColor: borderColorHover,
         boxShadow: `0 0 0 ${theme.spacing(0.63)}px ${
           theme.palette.primary.light
@@ -53,18 +53,18 @@ const useStyles = makeStyles((theme) => {
     },
 
     actionButtons: {
-      position: "absolute",
+      position: 'absolute',
       top: theme.spacing(1.25),
       right: theme.spacing(1.25),
-      marginLeft: "auto",
+      marginLeft: 'auto',
       width: theme.spacing(3.75),
       opacity: 0,
-      transition: "all .2s",
-      pointerEvents: "none",
+      transition: 'all .2s',
+      pointerEvents: 'none',
     },
 
     show: {
-      pointerEvents: "all",
+      pointerEvents: 'all',
       opacity: 1,
     },
 
@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme) => {
       height: theme.spacing(3),
       width: theme.spacing(3),
       background: theme.palette.background.default,
-      "&:hover": {
+      '&:hover': {
         background: theme.palette.background.default,
       },
     },
@@ -90,29 +90,29 @@ const useStyles = makeStyles((theme) => {
     image: {
       width: theme.spacing(18.75),
       height: theme.spacing(22.5),
-      objectFit: "cover",
+      objectFit: 'cover',
     },
 
     imageCard_title: {
       marginTop: theme.spacing(1),
-      maxWidth: "100%",
-      "& p": {
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
+      maxWidth: '100%',
+      '& p': {
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
         lineHeight: `${theme.spacing(2)}px`,
-        fontFamily: "SB Sans UI, SB Sans Display, Open Sans, Helvetica",
+        fontFamily: 'SB Sans UI, SB Sans Display, Open Sans, Helvetica',
         fontSize: theme.spacing(1.38),
       },
     },
-  };
-});
+  }
+})
 export interface AddImageModalItemProps {
-  id: string;
-  src: string;
-  name: string;
-  addImage: (src: string) => void;
-  onDeleteImage: (id: string) => void;
+  id: string
+  src: string
+  name: string
+  addImage: (src: string) => void
+  onDeleteImage: (id: string) => void
 }
 
 export const AddImageModalItem = ({
@@ -122,10 +122,10 @@ export const AddImageModalItem = ({
   addImage,
   onDeleteImage,
 }: AddImageModalItemProps) => {
-  const classes = useStyles();
-  const [isShowControls, setShowControls] = useState(false);
+  const classes = useStyles()
+  const [isShowControls, setShowControls] = useState(false)
 
-  const deleteImage = () => onDeleteImage(id);
+  const deleteImage = () => onDeleteImage(id)
 
   return (
     <Grid
@@ -162,8 +162,8 @@ export const AddImageModalItem = ({
               <IconButton
                 className={classes.buttonIcon}
                 onClick={(e: React.MouseEvent) => {
-                  e.stopPropagation();
-                  deleteImage();
+                  e.stopPropagation()
+                  deleteImage()
                 }}
               >
                 <Delete className={classes.imageActionIcon} />
@@ -180,11 +180,11 @@ export const AddImageModalItem = ({
             </Tooltip>
           </Grid>
         </Grid>
-        <img src={`/gateway${src}`} alt="SberCRM" className={classes.image} />
+        <img src={`${src}`} alt="editor_image" className={classes.image} />
       </Grid>
       <Grid item className={classes.imageCard_title}>
         <Typography color="textSecondary">{name}</Typography>
       </Grid>
     </Grid>
-  );
-};
+  )
+}

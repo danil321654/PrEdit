@@ -1,9 +1,9 @@
 import { Editor } from '@tiptap/core'
+import { ImageParams } from '../records'
 import { Slice } from 'prosemirror-model'
 import { JSONContent } from '@tiptap/react'
 import { prepareHTMLForPrint } from './html'
 import { EditorState } from 'prosemirror-state'
-import { PrintFormsImageParams } from '../records'
 import { AxiosInstance, AxiosResponse } from 'axios'
 import { findParentNodeOfType } from 'prosemirror-utils'
 import { convertToValidFileName, resizeImage } from '../helpers'
@@ -158,30 +158,26 @@ export const pasteImages =
         const resizedImage = await resizeImage(image)
         return {
           fileName: convertToValidFileName(image.name),
-          file: await resizedImage.arrayBuffer(),
+          file: await resizedImage,
         }
       })
     )
-
     const responses = await Promise.allSettled(
-      requests.map((item) =>
-        apiClient.post<
-          Partial<PrintFormsImageParams>,
-          AxiosResponse<Partial<PrintFormsImageParams>>
-        >(`print-form/image?name=${item.fileName}`, item.file, {
-          headers: {
-            'Content-Type': 'application/octet-stream',
-          },
-          withCredentials: true,
-        })
-      )
+      requests.map((item) => {
+        const body = new FormData()
+        body.set('file', item.file)
+        return apiClient.post<
+          Partial<ImageParams>,
+          AxiosResponse<Partial<ImageParams>>
+        >(`/file`, body)
+      })
     )
 
     responses.forEach((item) => {
       if (item.status === 'fulfilled')
         ed.chain()
           .focus()
-          .addImage({ src: `/print-form/image/${item.value.data.id}` })
+          .addImage({ src: `/file/${item.value.data.id}` })
           .run()
     })
   }

@@ -6,7 +6,9 @@ import { configureStore } from './store'
 import { RichTextEditor } from './components'
 import { ApiContextProvider } from './contexts'
 
-const apiClient = axios.create()
+const apiClient = axios.create({
+  timeout: 1000,
+})
 
 const store = configureStore({ apiClient })
 

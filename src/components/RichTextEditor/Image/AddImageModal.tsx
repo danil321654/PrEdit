@@ -1,10 +1,11 @@
-import AddImageModalUpload from "./AddImageModalUpload";
-import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
-import { imagesPerPage } from "../../../constants";
-import { useDispatch, useSelector } from "react-redux";
-import { AddImageModalItem } from "./AddImageModalItem";
-import { PrintFormsImageParams } from "../../../records";
-import { convertToValidFileName, resizeImage } from "../../../helpers";
+import AddImageModalUpload from './AddImageModalUpload'
+import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
+import { imagesPerPage } from '../../../constants'
+import { imagesSelector } from '../../../selectors'
+import { useDispatch, useSelector } from 'react-redux'
+import { AddImageModalItem } from './AddImageModalItem'
+import { convertToValidFileName, resizeImage } from '../../../helpers'
+import { imagesCreateAction, imagesFetchAction } from '../../../actions'
 import {
   Backdrop,
   CircularProgress,
@@ -12,79 +13,79 @@ import {
   DialogTitle,
   Grid,
   makeStyles,
-} from "@material-ui/core";
+} from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
   modalPaper: {
-    margin: "auto",
+    margin: 'auto',
   },
   imageListWrapper: {
-    position: "relative",
-    height: "100%",
+    position: 'relative',
+    height: '100%',
     minHeight: theme.spacing(75),
   },
   imageList: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(1.875),
-    overflow: "auto",
+    overflow: 'auto',
     borderRight: `1px solid ${theme.palette.grey[100]}`,
-    boxSizing: "border-box",
-    flexWrap: "wrap",
+    boxSizing: 'border-box',
+    flexWrap: 'wrap',
     maxHeight: theme.spacing(70),
   },
   backdrop: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
     zIndex: theme.zIndex.modal + 201,
     color: theme.palette.primary.main,
     backgroundColor:
-      theme.palette.type === "light"
-        ? "rgba(0, 0, 0, 0.1)"
-        : "rgba(0, 0, 0, 0.5)",
+      theme.palette.type === 'light'
+        ? 'rgba(0, 0, 0, 0.1)'
+        : 'rgba(0, 0, 0, 0.5)',
   },
-}));
+}))
 export interface AddImageModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  addImage: (url: string) => void;
+  isOpen: boolean
+  onClose: () => void
+  addImage: (url: string) => void
 }
 
 interface ILoads {
-  progress: number;
-  isDownloaded: boolean;
-  error: string | null;
+  progress: number
+  isDownloaded: boolean
+  error: string | null
 }
 
-const validExtFile = ["jpeg", "jpg", "png"];
+const validExtFile = ['jpeg', 'jpg', 'png']
 
 export const AddImageModal = ({
   addImage,
   onClose,
   isOpen,
 }: AddImageModalProps): ReactElement<AddImageModalProps> | null => {
-  const classes = useStyles();
-  const imagesData: PrintFormsImageParams[] = [];
-  const allImagesLoaded = true;
-  const [loads, setLoads] = useState<Record<string, ILoads>>({});
-  const dispatch = useDispatch();
-  const isLoading = false;
+  const classes = useStyles()
+  const imagesData = useSelector(imagesSelector)
+  const allImagesLoaded = true
+  const [loads, setLoads] = useState<Record<string, ILoads>>({})
+  const dispatch = useDispatch()
+  const isLoading = false
   useEffect(() => {
     if (isOpen) {
-      // dispatch(printFormsImagesFetchAction.request({ page: 0 }));
+      // dispatch(.request({ page: 0 }))
     }
-  }, [dispatch, isOpen]);
+  }, [dispatch, isOpen])
 
   const addImageAndCloseModal = (url: string): void => {
-    addImage(url);
-    onClose();
-  };
+    addImage(url)
+    onClose()
+  }
 
-  const deleteImageHandle = (imageId: string) => {
-    // dispatch(printFormsImagesDeleteAction.request({ imageId }));
-  };
+  const deleteImageHandle = (_imageId: string) => {
+    // dispatch(printFormsImagesDeleteAction.request({ imageId }))
+  }
 
   const changeLoads = (
     key: string,
@@ -99,51 +100,52 @@ export const AddImageModal = ({
         isDownloaded,
         error,
       },
-    }));
-  };
+    }))
+  }
 
   const markIsCompleted = (key: string) => {
-    changeLoads(key, 100, true, null);
-  };
+    changeLoads(key, 100, true, null)
+  }
 
   const markIsError = (key: string) => (err: string) => {
-    changeLoads(key, 0, false, err);
-  };
+    changeLoads(key, 0, false, err)
+  }
 
   const loadImage =
     (keyExists: string | null) => async (e: ChangeEvent<HTMLInputElement>) => {
-      const input = e.target;
-      if (!input.files) return;
-      const fileSrc = input.files[0];
-      const resizedImage = await resizeImage(fileSrc);
-      const buffer = await resizedImage.arrayBuffer();
-      const key: string = keyExists || new Date().getTime().toString();
+      const input = e.target
+      if (!input.files) return
+      const fileSrc = input.files[0]
+      const resizedImage = await resizeImage(fileSrc)
+      const file = new FormData()
+      file.set('file', resizedImage)
+      const key: string = keyExists || new Date().getTime().toString()
 
       const extFile = fileSrc.name
-        .substring(fileSrc.name.lastIndexOf(".") + 1, fileSrc.name.length)
-        .toLowerCase();
+        .substring(fileSrc.name.lastIndexOf('.') + 1, fileSrc.name.length)
+        .toLowerCase()
       if (!validExtFile.includes(extFile))
-        return changeLoads(key, 0, false, "Формат файла не поддерживается");
-      // dispatch(
-      //   printFormsImagesCreateAction.request({
-      //     name: convertToValidFileName(fileSrc.name),
-      //     body: buffer,
-      //     onUploadProgress: (progressEvent: any) => {
-      //       const percent = Math.round(
-      //         (progressEvent.loaded * 100) / progressEvent.total
-      //       );
-      //       changeLoads(key, percent, false, null);
-      //     },
-      //     markIsCompleted: () => markIsCompleted(key),
-      //     markIsError: markIsError(key),
-      //   })
-      // );
+        return changeLoads(key, 0, false, 'Формат файла не поддерживается')
+      dispatch(
+        imagesCreateAction.request({
+          name: convertToValidFileName(fileSrc.name),
+          file,
+          onUploadProgress: (progressEvent: ProgressEvent) => {
+            const percent = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            )
+            changeLoads(key, percent, false, null)
+          },
+          markIsCompleted: () => markIsCompleted(key),
+          markIsError: markIsError(key),
+        })
+      )
       // Меняет value у input, чтобы onChange сработал при последующей загрузке того же файла
-      input.value = "";
-    };
+      input.value = ''
+    }
 
   const scrollHandle = (e: React.UIEvent<HTMLDivElement>) => {
-    const eventTarget = e.target as HTMLDivElement;
+    const eventTarget = e.target as HTMLDivElement
 
     if (
       !allImagesLoaded &&
@@ -152,14 +154,13 @@ export const AddImageModal = ({
         eventTarget.scrollHeight >
         0.77
     ) {
-      const currentPage = Math.floor(imagesData.length / imagesPerPage);
-      // dispatch(
-      //   printFormsImagesFetchAction.request({
-      //     page: currentPage,
-      //   })
-      // );
+      const _currentPage = Math.floor(imagesData.size / imagesPerPage)
     }
-  };
+  }
+
+  useEffect(() => {
+    dispatch(imagesFetchAction.request())
+  }, [dispatch])
 
   return (
     <Dialog
@@ -211,5 +212,5 @@ export const AddImageModal = ({
         </Grid>
       </Grid>
     </Dialog>
-  );
-};
+  )
+}

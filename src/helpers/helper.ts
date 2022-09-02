@@ -4,7 +4,7 @@ import tinycolor from 'tinycolor2'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { flow, groupBy } from 'lodash-es'
-import { List, Map, Record as ImmutableRecord } from 'immutable'
+import { List, Record as ImmutableRecord } from 'immutable'
 
 export function localFormat(date: Date, formatString: string) {
   return format(date, formatString, { locale: ru })
@@ -24,7 +24,7 @@ export function detailFormatDate(
   if (!date) {
     return []
   }
-  return formats.map(formatString => localFormat(date, formatString))
+  return formats.map((formatString) => localFormat(date, formatString))
 }
 
 export function RGBToHex(rgb: string): string {
@@ -70,7 +70,7 @@ export const templateTitleSchema = Yup.object().shape({
     .required('Обязательное поле')
     .max(30, 'В названии шаблона должно быть не более 30 символов')
     .matches(/^[a-zA-Zа-яА-ЯёЁ_:?"'.,№\-\d\s]+$/, 'Недопустимые символы')
-    .transform(value => (!value.trim() ? value.trim() : value)),
+    .transform((value) => (!value.trim() ? value.trim() : value)),
 })
 
 export const mockApiClient = Axios.create()
@@ -84,7 +84,7 @@ export const getHSLColor = (color: string) => tinycolor(color).toHslString()
 export const getLightenHSLColor = (
   color: string,
   lightenScale: number,
-  alpha = 1,
+  alpha = 1
 ) => {
   const hslColor = getHSLColor(color)
   return tinycolor(hslColor).lighten(lightenScale).setAlpha(alpha).toString()
@@ -92,20 +92,24 @@ export const getLightenHSLColor = (
 
 export const groupItemsByField = <E extends ImmutableRecord<any>>(
   list: List<E>,
-  field: string,
+  field: string
 ) => {
-  return groupBy(list.toArray(), item =>
-    toUpperCaseFirstChar(localFormat(new Date(item.get(field)), 'LLLL yyyy')),
+  return groupBy(list.toArray(), (item) =>
+    toUpperCaseFirstChar(localFormat(new Date(item.get(field)), 'LLLL yyyy'))
   )
 }
-
-
 
 export const flowAsync: typeof flow = (...fns: any[]) =>
   flow(
     ...fns.map(
-      fn =>
+      (fn) =>
         async (...args: unknown[]) =>
-          fn(...(await Promise.all(args))),
-    ),
+          fn(...(await Promise.all(args)))
+    )
   )
+
+export const getFormData = (object: Record<string, string | Blob>) =>
+  Object.keys(object).reduce((formData, key) => {
+    formData.append(key, object[key])
+    return formData
+  }, new FormData())
