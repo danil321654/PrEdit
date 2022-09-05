@@ -280,7 +280,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor }: MenuBarProps) => {
   }
 
   return (
-    <Grid container className={classes.menuBar}>
+    <Grid container justify="center" className={classes.menuBar}>
       {MENU_BUTTONS.map((el, idx) => {
         if (!el) {
           return null

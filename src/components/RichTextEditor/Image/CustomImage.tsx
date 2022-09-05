@@ -17,6 +17,8 @@ import { MAX_SIZE_IMG, MIN_SIZE_IMG } from '../../../constants'
 // import { printFormImageMount, printFormImageUnmount } from '../../../actions'
 import { convertToValidSize, cssToObj } from '../../../helpers'
 
+// TO DO: use resize lib
+
 const useStyles = makeStyles((theme) => ({
   customImage: {
     display: 'inline-flex',
@@ -187,7 +189,7 @@ export const CustomImage = ({
         const width = ref.current?.width ?? MAX_SIZE_IMG.WIDTH
         const height = ref.current?.height ?? MAX_SIZE_IMG.HEIGHT
         const { fixedWidth, fixedHeight } = convertToValidSize(width, height)
-        setNodeSizes(fixedWidth, fixedHeight)
+        // setNodeSizes(fixedWidth, fixedHeight)
         setSizeDivExpand(fixedWidth, fixedHeight)
       }
 
@@ -196,7 +198,7 @@ export const CustomImage = ({
       const currentRef = imgRef.current
       return () => {
         currentRef.onload = null
-        window.onmouseup = null
+        document.onmouseup = null
       }
     }
   }, [setNodeSizes])
@@ -226,7 +228,7 @@ export const CustomImage = ({
       if (sideB) el.style[sideB] = '0px'
     }
 
-    window.onmousemove = ({ clientX, clientY }: MouseEvent) => {
+    document.onmousemove = ({ clientX, clientY }: MouseEvent) => {
       setShowExpand(true)
       if (clientX !== oldX) {
         const div = (oldX - clientX) * mult
@@ -245,8 +247,8 @@ export const CustomImage = ({
       }
     }
 
-    window.onmouseup = () => {
-      window.onmousemove = null
+    document.onmouseup = () => {
+      document.onmousemove = null
       const { height, width } = getSizeDivExpand()
       setNodeSizes(width, height)
       setShowPreview(false)
