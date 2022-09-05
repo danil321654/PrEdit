@@ -29,6 +29,7 @@ const useStyles = makeStyles<Theme, Partial<RenderInputProps>>((theme) => ({
     opacity: (props) => (props.isEditable ? 1 : 0.3),
     width: (props) => theme.spacing(props.width ?? 11),
     '& input': {
+      color: theme.palette.text.primary,
       padding: `0 ${theme.spacing(1.5)}px`,
       overflow: 'hidden',
       whiteSpace: 'nowrap',

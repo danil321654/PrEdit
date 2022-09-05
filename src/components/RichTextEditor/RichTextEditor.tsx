@@ -87,7 +87,8 @@ const useStyles = makeStyles<Theme, Partial<RichTextEditorProps>>((theme) => ({
     '& .ProseMirror': {
       margin: '0 auto',
       maxWidth: theme.spacing(85),
-      height: '60vh',
+      border: '1px solid lightgray',
+      height: 'calc(100vh - 120px)',
       width: '100%',
       padding: '40px 0',
       '& * + *': {

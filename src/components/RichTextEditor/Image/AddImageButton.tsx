@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { Editor } from "@tiptap/core";
-import { AddImageModal } from "./AddImageModal";
-import { MenuButton } from "../MenuBar/MenuButton";
+import React, { useState } from 'react'
+import { Editor } from '@tiptap/core'
+import { AddImageModal } from './AddImageModal'
+import { MenuButton } from '../MenuBar/MenuButton'
 
 interface Props {
-  editor: Editor;
+  editor: Editor
 }
 
 export function AddImageButton({ editor }: Props) {
-  const [isOpen, setOpen] = useState(false);
-  const toggleDialog = () => setOpen((state) => !state);
+  const [isOpen, setOpen] = useState(false)
+  const toggleDialog = () => setOpen((state) => !state)
   return (
     <>
       <AddImageModal
@@ -17,7 +17,7 @@ export function AddImageButton({ editor }: Props) {
         onClose={toggleDialog}
         addImage={(url: string) => {
           if (url && editor) {
-            editor.chain().focus().addImage({ src: url }).run();
+            editor.chain().focus().addImage({ src: url }).run()
           }
         }}
       />
@@ -28,5 +28,5 @@ export function AddImageButton({ editor }: Props) {
         tooltip="Вставить изображение"
       />
     </>
-  );
+  )
 }

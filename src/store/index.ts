@@ -1,10 +1,10 @@
-// import * as epics from "../epics";
+import * as epics from '../epics'
 import { map } from 'lodash-es'
 import { BehaviorSubject } from 'rxjs'
 import { mergeMap } from 'rxjs/operators'
 import { rootReducer } from './rootReducer'
-import { AppState, Dependencies } from '../types'
-import { createStore, applyMiddleware, compose, Store, Action } from 'redux'
+import { AppActions, AppState, Dependencies } from '../types'
+import { createStore, applyMiddleware, compose, Store } from 'redux'
 import {
   createEpicMiddleware,
   ActionsObservable,
@@ -14,7 +14,7 @@ import {
 
 let composeEnhancers = compose
 
-export interface StoreInstance extends Store<AppState, Action<any>> {
+export interface StoreInstance extends Store<AppState, AppActions> {
   epic$: BehaviorSubject<any>
 }
 
@@ -32,13 +32,13 @@ export function configureStore(
     ) {
       composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
         // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
-        name: 'PrintForm',
+        name: 'PrEdit',
       })
     }
 
     const epicMiddleware = createEpicMiddleware<
-      Action<any>,
-      Action<any>,
+      AppActions,
+      AppActions,
       AppState,
       Dependencies
     >({ dependencies })
@@ -49,11 +49,11 @@ export function configureStore(
 
     storeInstance = {
       ...createStore(rootReducer, initialState, enhancer),
-      epic$: new BehaviorSubject(combineEpics(...map([]))),
-    } as StoreInstance
+      epic$: new BehaviorSubject(combineEpics(...map(epics))),
+    } as unknown as StoreInstance
 
     const rootEpic = (
-      action$: ActionsObservable<Action<any>>,
+      action$: ActionsObservable<AppActions>,
       state$: StateObservable<AppState>,
       deps: Dependencies
     ) =>
