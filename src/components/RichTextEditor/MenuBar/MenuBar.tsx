@@ -13,6 +13,8 @@ import {
   compareLineHeight,
   getHeadingFontSize,
   isHeadingActive,
+  prepareHTMLForPrint,
+  printDocument,
   wordUnitsToPx,
 } from '../../../utils'
 
@@ -269,6 +271,16 @@ const MENU_BUTTONS: MenuBtn[] = [
   {
     type: 'custom',
     customRender: renderInsertTableButton,
+  },
+
+  {
+    type: 'common',
+    icon: 'print',
+    tooltip: 'Печать',
+    onClick: (editor: Editor) => async () => {
+      const html = await prepareHTMLForPrint(editor.getHTML())
+      printDocument(html, 'example')
+    },
   },
 ]
 

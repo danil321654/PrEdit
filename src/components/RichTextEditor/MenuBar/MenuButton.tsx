@@ -4,6 +4,7 @@
 import clsx from 'clsx'
 import MenuBtnChild from './MenuBtnChild'
 import React, { useEffect, useRef } from 'react'
+import { Print } from '@material-ui/icons'
 import { makeStyles, Theme, Tooltip } from '@material-ui/core'
 import {
   Bold,
@@ -220,6 +221,7 @@ const MENU_ICONS = {
   upload: Upload,
   lineHeight: LineHeight,
   noBorder: NoBorder,
+  print: Print as unknown as 'inherit',
 } as const
 export type MenuIcons = typeof MENU_ICONS
 
