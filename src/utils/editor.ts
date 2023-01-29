@@ -84,27 +84,42 @@ export const printDocument = async (
   iframeForPrint.style.width = '640px'
   iframeForPrint.style.height = '0px'
   iframeForPrint.style.visibility = 'hidden'
-  if (iframeForPrint) {
-    document.body.appendChild(iframeForPrint)
-    iframeForPrint.contentDocument?.write(prepareHTMLForPrint(html))
+  document.body.appendChild(iframeForPrint)
 
-    await Promise.all(
-      Array.from(iframeForPrint.contentDocument?.images || [])
-        .filter((img) => !img.complete)
-        .map(
-          (img) =>
-            new Promise((resolve) => {
-              img.onload = img.onerror = resolve
-            })
-        )
-    )
+  iframeForPrint.onload = async () => {
     if (iframeForPrint.contentDocument && iframeForPrint.contentWindow) {
+      iframeForPrint.contentDocument.body.innerHTML = prepareHTMLForPrint(html)
+      await Promise.all(
+        Array.from(iframeForPrint.contentDocument?.images || [])
+          .filter((img) => !img.complete)
+          .map(
+            (img) =>
+              new Promise((resolve) => {
+                img.onload = img.onerror = resolve
+              })
+          )
+      )
+
       const documentTitle = document.title
       document.title = printDocumentTitle
+      iframeForPrint.contentWindow.focus()
       iframeForPrint.contentWindow.print()
       document.title = documentTitle
-      iframeForPrint.contentDocument.close()
-      iframeForPrint.remove()
+      if ('matchMedia' in iframeForPrint.contentWindow) {
+        iframeForPrint.contentWindow
+          .matchMedia('print')
+          .addEventListener('change', function (media) {
+            if (!media.matches) {
+              iframeForPrint.contentDocument?.close()
+              iframeForPrint.remove()
+            }
+          })
+      } else {
+        ;(iframeForPrint.contentWindow as Window).onafterprint = function () {
+          iframeForPrint.contentDocument?.close()
+          iframeForPrint.remove()
+        }
+      }
     }
   }
 }

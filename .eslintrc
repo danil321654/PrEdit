@@ -6,7 +6,8 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:jsx-a11y/recommended",
     "plugin:react/recommended",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "react-hooks"
   ],
   "plugins": ["react-hooks", "pretty-imports", "jsx-a11y"],
   "settings": {
